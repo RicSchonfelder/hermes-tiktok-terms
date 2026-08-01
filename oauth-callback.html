@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hermes TikTok OAuth Callback</title>
+<style>
+  body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;background:#1a1a2e;color:#eee;display:flex;min-height:100vh;align-items:center;justify-content:center;margin:0}
+  .card{background:#0f3460;padding:32px 40px;border-radius:16px;max-width:640px;width:90%;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+  h1{font-size:22px;margin-top:0}
+  code{display:block;background:#0a0a1a;padding:14px;border-radius:8px;word-break:break-all;font-size:13px;margin:10px 0}
+  .ok{color:#7dff8a}.err{color:#ff7d7d}
+  button{background:#ff4d4d;color:#fff;border:0;padding:10px 18px;border-radius:8px;cursor:pointer;font-size:14px;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>Hermes TikTok OAuth Callback</h1>
+<p>This page captures the authorization result so the Hermes agent can complete the token exchange.</p>
+<div id="out"><p>Waiting for callback parameters…</p></div>
+</div>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const out = document.getElementById('out');
+  const code = params.get('code');
+  const error = params.get('error');
+  const state = params.get('state');
+  const scopes = params.get('scope');
+  let html = '';
+  if (code) {
+    html += '<p class="ok">Authorization succeeded. Copy the code below and give it to Hermes:</p>';
+    html += '<code id="code">' + code + '</code>';
+    html += '<button onclick="navigator.clipboard.writeText(document.getElementById(\'code\').textContent);this.textContent=\'Copied!\'">Copy code</button>';
+  } else if (error) {
+    html += '<p class="err">Authorization error: ' + error + '</p>';
+  } else {
+    html += '<p class="err">No code or error parameter present.</p>';
+  }
+  if (state) html += '<p>State: <code>' + state + '</code></p>';
+  if (scopes) html += '<p>Scopes: <code>' + scopes + '</code></p>';
+  out.innerHTML = html;
+</script>
+</body>
+</html>
